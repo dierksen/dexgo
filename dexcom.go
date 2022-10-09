@@ -104,13 +104,13 @@ func (d *Dexcom) auth() error {
 }
 
 func convertTimestamp(wt string) (time.Time, error) {
-	matches := timestampRegex.FindAllStringSubmatch(wt, -1)
-	if len(matches) != 1 || len(matches[0]) != 2 {
+	matches := timestampRegex.FindStringSubmatch(wt)
+	if len(matches) != 2 {
 		return time.Time{}, fmt.Errorf("failed to parse timestamp: %s", wt)
 	}
-	timeMillis, err := strconv.Atoi(matches[0][1])
+	timeMillis, err := strconv.Atoi(matches[1])
 	if err != nil {
-		return time.Time{}, fmt.Errorf("invalid timestamp: %s", matches[0][1])
+		return time.Time{}, fmt.Errorf("invalid timestamp: %s", matches[1])
 	}
 	return time.UnixMilli(int64(timeMillis)), nil
 }
